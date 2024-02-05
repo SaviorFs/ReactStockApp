@@ -1,0 +1,10 @@
+
+
+/* StockDisplay Component Styles */
+.stock-display-container {
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #e2e8f0; /* Add a border */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}

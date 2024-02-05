@@ -1,25 +1,69 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import SearchBar from './components/SearchBar/SearchBar';
+import StockDisplay from './components/StockDisplay/StockDisplay';
+import StockChart from './components/StockChart/StockChart';
+import CompanyProfile from './components/CompanyProfile/CompanyProfile';
+import CompanyLogo from './components/CompanyLogo/CompanyLogo';
+import {
+    fetchStockData,
+    fetchHistoricalData,
+    fetchCompanyProfile
+} from './api/stockAPI';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    const [symbol, setSymbol] = useState('AAPL');
+    const [stockData, setStockData] = useState(null);
+    const [historicalData, setHistoricalData] = useState([]);
+    const [companyProfile, setCompanyProfile] = useState(null); 
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const currentData = await fetchStockData(symbol);
+                const historical = await fetchHistoricalData(symbol); 
+                const profileData = await fetchCompanyProfile(symbol); 
+                
+                setStockData(currentData);
+                setHistoricalData(historical);
+                setCompanyProfile(profileData); 
+                setError(null);
+            } catch (error) {
+                console.error('Failed to fetch data', error);
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (symbol) {
+            fetchData();
+        }
+    }, [symbol]);
+
+    return (
+        <div className="min-h-screen bg-gray-100 text-gray-900 flex flex-col">
+            <header className="bg-gray-800 p-4 shadow-lg">
+                <div className="container mx-auto">
+                    <h1 className="text-3xl font-bold text-white">Stock App</h1>
+                    <SearchBar onSearch={setSymbol} />
+                {loading && <p className="text-lg text-red-500">Loading...</p>}
+                {error && <p className="text-lg text-red-500">Error: {error.message}</p>}
+                {companyProfile && <CompanyLogo logoUrl={companyProfile.image} companyName={companyProfile.companyName} />}
+                </div>
+            </header>
+
+            <div className="container mx-auto p-4">
+                <div className="flex flex-col space-y-4">
+                    {stockData && <StockDisplay stockData={stockData} />}
+                    {historicalData.length > 0 && <StockChart historicalData={historicalData} />}
+                    {companyProfile && <CompanyProfile profile={companyProfile} />}
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export default App;

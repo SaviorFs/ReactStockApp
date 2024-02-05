@@ -1,0 +1,40 @@
+.company-profile-container {
+    display: flex;
+    gap: 0;
+    align-items: center;
+    background-color: #fff;
+    padding: 1rem;
+    margin: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.company-info-container {
+    flex-grow: 1;
+}
+
+.company-info-container h2 {
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.company-info-container p {
+    color: #666;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.company-info-container div {
+    margin-top: 0.25rem;
+}
+
+.company-info-container a {
+    color: #007bff;
+    transition: color 0.3s;
+}
+
+.company-info-container a:hover {
+    color: #0056b3;
+}
