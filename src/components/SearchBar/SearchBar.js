@@ -2,7 +2,7 @@ import React from 'react';
 import tickers from '../../company_tickers.json';
 import './SearchBar.css'; // Import the CSS file
 
-const SearchBar = ({ onSearch, useEffect }) => {
+const SearchBar = ({ onSearch, preFetch }) => {
     const [input, setInput] = React.useState('');
     const [inputInFocus, setInputInFocus] = React.useState('');
     const reccomendationAmount = 800; // number of reccomendations to show the user
@@ -11,11 +11,12 @@ const SearchBar = ({ onSearch, useEffect }) => {
     //the hook useRef does not re-render the DOM if the data inside changes
     //with strict mode enabled, the useEffect still runs twice so we use this too
     const hasRunOnce = React.useRef(false)
-
+    const preFetchAmount = 6; //number of reccomendations to preFetch
     const companyTickerArray = React.useRef([]);
     const tickersAsKey = React.useRef({});
     const namesAsKey = React.useRef({});
     const companyNameArray = React.useRef([]);
+    const useCache = true;
     //use effect hook with empty dependency arry means this code is only ran once when the component loads
     React.useEffect(() => {
 
@@ -50,8 +51,7 @@ const SearchBar = ({ onSearch, useEffect }) => {
     //changes lowercase user input to uppercase, as all stock tickers are uppercase.  The bold upercase also looks really cool.
     const maintainUpperCase = (userInputEvent) => {
         const userInputText = userInputEvent.target.value.toString();
-        const tempRec = getTickerReccomendations(userInputText.toLowerCase());
-        setReccomendations(tempRec);
+        getReccomendations(userInputText.toLowerCase());
 
         //change the value of the input in the DOM to the upercase version of the user inputted text
         setInput(userInputText.toUpperCase());
@@ -59,6 +59,20 @@ const SearchBar = ({ onSearch, useEffect }) => {
 
 
     };
+    const getReccomendations = (searchTerm) => {
+        const tickerRec = getTickerReccomendations(searchTerm);
+        const rec = tickerRec;
+        setReccomendations(rec);
+        let count = 0;
+        for (const each of rec) {
+            if (count > preFetchAmount) {
+                break;
+            }
+            console.log(each)
+            preFetch(each);
+            count++;
+        }
+    }
     const getTickerReccomendations = (searchTerm) => {
         let temp = [];
         for (const each of companyTickerArray.current) {
@@ -83,7 +97,6 @@ const SearchBar = ({ onSearch, useEffect }) => {
         }
     }
     const recClickHandler = (event, rec) => {
-        console.log(rec);
         setInput(rec.toUpperCase());
         onSearch(rec.toUpperCase());
         setshowReccomendations(false);
@@ -95,7 +108,7 @@ const SearchBar = ({ onSearch, useEffect }) => {
     const setInFocus = () => {
 
         if (input) {
-            getTickerReccomendations(input);
+            getReccomendations(input);
         }
         setshowReccomendations(true)
     }
