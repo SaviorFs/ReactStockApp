@@ -14,7 +14,7 @@ const App = () => {
     const [symbol, setSymbol] = useState('AAPL');
     const [stockData, setStockData] = useState(null);
     const [historicalData, setHistoricalData] = useState([]);
-    const [companyProfile, setCompanyProfile] = useState(null); 
+    const [companyProfile, setCompanyProfile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -23,12 +23,12 @@ const App = () => {
             setLoading(true);
             try {
                 const currentData = await fetchStockData(symbol);
-                const historical = await fetchHistoricalData(symbol); 
-                const profileData = await fetchCompanyProfile(symbol); 
-                
+                const historical = await fetchHistoricalData(symbol);
+                const profileData = await fetchCompanyProfile(symbol);
+
                 setStockData(currentData);
                 setHistoricalData(historical);
-                setCompanyProfile(profileData); 
+                setCompanyProfile(profileData);
                 setError(null);
             } catch (error) {
                 console.error('Failed to fetch data', error);
@@ -45,13 +45,13 @@ const App = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 text-gray-900 flex flex-col">
-            <header className="bg-gray-800 p-4 shadow-lg">
-                <div className="container mx-auto">
-                    <h1 className="text-3xl font-bold text-white">Stock App</h1>
+            <header className="bg-gray-800 sticky z-10 top-0 w-screen h-fit  p-4 shadow-lg">
+                <div className="grid grid-cols-5 mx-auto">
+                    <h1 className="text-3xl font-bold text-white ml-auto">Stock App</h1>
                     <SearchBar onSearch={setSymbol} />
-                {loading && <p className="text-lg text-red-500">Loading...</p>}
-                {error && <p className="text-lg text-red-500">Error: {error.message}</p>}
-                {companyProfile && <CompanyLogo logoUrl={companyProfile.image} companyName={companyProfile.companyName} />}
+                    {loading && <p className="text-lg text-red-500">Loading...</p>}
+                    {error && <p className="text-lg text-red-500">Error: {error.message}</p>}
+                    {companyProfile && <CompanyLogo logoUrl={companyProfile.image} companyName={companyProfile.companyName} />}
                 </div>
             </header>
 
