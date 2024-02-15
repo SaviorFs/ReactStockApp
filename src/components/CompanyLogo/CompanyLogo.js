@@ -7,7 +7,7 @@ const CompanyLogo = ({ logoUrl, companyName }) => {
     }
 
     return (
-        <div className="company-logo-container mr-auto">
+        <div className="company-logo-container">
             <img src={logoUrl} alt={`${companyName} Logo`} className="company-logo" />
         </div>
     );
