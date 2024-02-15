@@ -58,11 +58,16 @@ const StockChart = ({ historicalData }) => {
             x: {
                 type: 'time',
                 time: {
-                    unit: 'day'
+                    unit: 'month'
                 }
             },
             y: {
                 beginAtZero: true
+            }
+        },
+        elements: {
+            point: {
+                pointStyle: false
             }
         },
         maintainAspectRatio: true, // Maintain aspect ratio
